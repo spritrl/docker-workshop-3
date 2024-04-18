@@ -1,0 +1,52 @@
+version: "3"
+services:
+  api:
+    build: ./api
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql
+    networks:
+      - backend
+
+  front_admin:
+    build: ./front_admin
+    ports:
+      - "8082:80"
+    depends_on:
+      - api
+    networks:
+      - frontend
+
+  front_users:
+    build: ./front_users
+    ports:
+      - "8081:80"
+    depends_on:
+      - api
+    networks:
+      - frontend
+
+  mysql:
+    build: ./mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mydb
+    volumes:
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - backend
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - front_admin
+      - front_users
+    networks:
+      - frontend
+
+networks:
+  frontend:
+  backend:

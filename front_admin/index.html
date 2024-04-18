@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Front Administrateur</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <h1>Créer une adresse</h1>
+    <form id="addressForm">
+      <label for="numero_rue">Numéro de rue:</label>
+      <input type="text" id="numero_rue" name="numero_rue" required /><br />
+
+      <label for="nom_rue">Nom de rue:</label>
+      <input type="text" id="nom_rue" name="nom_rue" required /><br />
+
+      <label for="ville">Ville:</label>
+      <input type="text" id="ville" name="ville" required /><br />
+
+      <label for="code_postal">Code postal:</label>
+      <input type="text" id="code_postal" name="code_postal" required /><br />
+
+      <button type="submit">Créer l'adresse</button>
+    </form>
+
+    <script>
+      document
+        .getElementById("addressForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          var numero_rue = document.getElementById("numero_rue").value;
+          var nom_rue = document.getElementById("nom_rue").value;
+          var ville = document.getElementById("ville").value;
+          var code_postal = document.getElementById("code_postal").value;
+
+          var data = {
+            numero_rue: numero_rue,
+            nom_rue: nom_rue,
+            ville: ville,
+            code_postal: code_postal,
+          };
+
+          fetch("http://localhost:5000/admin/addresses", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data);
+              alert("Adresse créée avec succès");
+              document.getElementById("addressForm").reset();
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert(
+                "Une erreur s'est produite lors de la création de l'adresse"
+              );
+            });
+        });
+    </script>
+  </body>
+</html>

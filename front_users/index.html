@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Front Utilisateurs</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <h1>Liste des adresses</h1>
+    <table id="addressTable">
+      <thead>
+        <tr>
+          <th>Numéro de rue</th>
+          <th>Nom de rue</th>
+          <th>Ville</th>
+          <th>Code postal</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <script>
+      fetch("http://localhost:5000/users/addresses")
+        .then((response) => response.json())
+        .then((data) => {
+          const addressTable = document.getElementById("addressTable");
+          const addressTableBody = addressTable.querySelector("tbody");
+
+          data.addresses.forEach((address) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                        <td>${address.numero_rue}</td>
+                        <td>${address.nom_rue}</td>
+                        <td>${address.ville}</td>
+                        <td>${address.code_postal}</td>
+                    `;
+            addressTableBody.appendChild(row);
+          });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert(
+            "Une erreur s'est produite lors de la récupération des adresses"
+          );
+        });
+    </script>
+  </body>
+</html>
